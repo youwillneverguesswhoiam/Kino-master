@@ -1,0 +1,12 @@
+<hibernate-mapping package="sample">
+
+    <class name="Film" table="FYLM">
+        <id name="nazwa" column="NAZWA">
+            <generator class="native"/>
+        </id>
+        <property name="opis" column="OPIS"/>
+        <property name="czas" column="CZAS"/>
+        <property name="limit" column="LIMIT"/>
+        <property name="kiedy" column="KIEDY"/>
+
+    </class>
