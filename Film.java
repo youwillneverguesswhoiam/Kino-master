@@ -31,9 +31,20 @@ public class Film implements Serializable {
     @Column (name = "SALA")
     public String sala;
 
-    @ManyToMany (fetch = FetchType.EAGER)
-    @JoinTable(name = "FplusS", joinColumns = @JoinColumn(name = "FILM_ID"), inverseJoinColumns = @JoinColumn(name = "SALE_ID"))
-    private Collection<Sale> salki = new ArrayList<>(0);
+    public Set<Seans> getsSeans() {
+        return sSeans;
+    }
+
+    public void setsSeans(Set<Seans> sSeans) {
+        this.sSeans = sSeans;
+    }
+
+    @OneToMany
+    private Set<Seans> sSeans = new HashSet<>(0);
+
+    /*@ManyToMany (fetch = FetchType.EAGER)
+    @JoinTable(name = "FplusS", joinColumns = @JoinColumn(name = "FILM_ID"), inverseJoinColumns = @JoinColumn(name = "SALE_ID"))*/
+
 
     public String getKiedy() {
         return kiedy;
@@ -47,13 +58,7 @@ public class Film implements Serializable {
     //public cośtam obrazek;
 
 
-    public Collection<Sale> getSalki() {
-        return salki;
-    }
 
-    public void setSalki(Collection<Sale> salki) {
-        this.salki = salki;
-    }
     public void setKiedy(String kiedy) {
         this.kiedy = kiedy;
     }

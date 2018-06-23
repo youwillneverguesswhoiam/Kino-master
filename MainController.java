@@ -19,6 +19,7 @@ public class MainController implements HierarchicalController<MainController> {
 
     public MainController() {
         dataContainer = new DataContainer();
+
     }
 
     public void daneOsobowe(ActionEvent actionEvent) {

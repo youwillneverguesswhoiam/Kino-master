@@ -19,8 +19,19 @@ public class Sale implements Serializable {
     protected String sala;
     @Column(name = "KIEDY2")
     protected String kiedy;
-    @ManyToMany(fetch = FetchType.EAGER,mappedBy = "salki")
-    private Collection<Film> filmiki = new ArrayList<Film>();
+    /*@ManyToMany(fetch = FetchType.EAGER,mappedBy = "salki")*/
+    @OneToMany
+    private Set<Seans> sSeans = new HashSet<>(0);
+
+    public Set<Seans> getsSeans() {
+        return sSeans;
+    }
+
+    public void setsSeans(Set<Seans> sSeans) {
+        this.sSeans = sSeans;
+    }
+
+
     /*@ManyToMany
     @JoinTable(name = "GROUPS_FOR_STUDENTS", joinColumns = @JoinColumn(name = "GROUP_ID"), inverseJoinColumns = @JoinColumn(name = "STUDENT_ID"))
     protected List<Student> students;*/
@@ -34,14 +45,6 @@ public class Sale implements Serializable {
     public void setFilms(List<Film> Films) {
         this.Films = Films;
     }*/
-
-    public Collection<Film> getFilmiki() {
-        return filmiki;
-    }
-
-    public void setFilmiki(Collection<Film> filmiki) {
-        this.filmiki = filmiki;
-    }
     public Integer getId() {
         return id;
     }

@@ -1,5 +1,6 @@
 package sample;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -52,9 +53,9 @@ public class DataContainer {
         loadFilmFromDatabase();
         loadSalaFromDatabase();
         loadSeansFromDatabase();
-        mergeData();
+        //mergeData();
     }
-    private void loadFilmFromDatabase() {
+    public void loadFilmFromDatabase() {
         try (Session ses = sessionFactory.openSession()) {
             ses.beginTransaction();
             Query<Film> query = ses.createQuery("from Film", Film.class);
@@ -79,25 +80,31 @@ public class DataContainer {
         }
     }
     private void loadSeansFromDatabase() {
+        Seans seansik = new Seans(null, null, null, null);
+        List<Film> juzsa = new ArrayList<>();
+        String nazwa=filmy.get(0).getNazwa();
         try (Session ses = sessionFactory.openSession()) {
             ses.beginTransaction();
-            Query<Seans> query = ses.createQuery("from Seans", Seans.class);
-            seanse.addAll(query.list());
+            Query queryF = ses.createQuery("from Film film where film.nazwa = :nazwa");
+            queryF.setParameter("nazwa", nazwa);
+            //List listF = queryF.list();
+            Film fi = (Film) queryF.list().get(0);
+            juzsa.addAll(queryF.list());
             ses.getTransaction().commit();
-
         } catch (HibernateException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             alert.show();
         }
     }
-    private void mergeData(){
+
+    /*private void mergeData(){
         for (Film f: filmy) {
             for (Sale s: sale) {
                 f.getSalki().add(s);
             }
         }
-        /*try (Session ses = sessionFactory.openSession()) {
+        try (Session ses = sessionFactory.openSession()) {
             ses.beginTransaction();
             Query quer = ses.createQuery("select * from FplusS ");
             seanse.addAll(quer.list());
@@ -108,8 +115,8 @@ public class DataContainer {
             alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             alert.show();
         }
-*/
-    }
+
+    }*/
     public SessionFactory getSessionFactory() {
         return sessionFactory;
     }
