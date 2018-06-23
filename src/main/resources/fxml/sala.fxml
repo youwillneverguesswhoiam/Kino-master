@@ -22,8 +22,8 @@
    <right>
       <VBox prefHeight="436.0" prefWidth="172.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="tnazwa" promptText="Imie" />
-            <TextField fx:id="tnr_sali" promptText="Nazwisko" />
+            <TextField fx:id="tnazwa" promptText="Nazwa" />
+            <TextField fx:id="tnr_sali" promptText="Nr Sali" />
             <TextField fx:id="tkiedy" layoutX="10.0" layoutY="49.0" promptText="kiedy" />
             <!--<TextField fx:id="opisOceny" layoutX="10.0" layoutY="49.0" promptText="Opis oceny" />-->
             <Button mnemonicParsing="false" onAction="#dodaj" text="Dodaj"  />
