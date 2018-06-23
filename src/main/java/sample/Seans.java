@@ -2,61 +2,95 @@ package sample;
 
 import javafx.scene.control.TextField;
 
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
+import static org.hibernate.sql.InFragment.NULL;
+
+@Entity
+@Table(name = "SEANS")
 public class Seans {
-
-    private String tnr_sali;
-    private String nazwa;
-    private String czas;
-    private String limit;
-    private LocalDate kiedy_jest;
-
-    public Seans(String tnr_sali, String nazwa, String czas, String limit, LocalDate kiedy_jest) {
-        this.tnr_sali = tnr_sali;
-        this.nazwa = nazwa;
-        this.czas = czas;
-        this.limit = limit;
-        this.kiedy_jest = kiedy_jest;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
+    protected Integer Seans_id;
+    @Column(name = "FILM1")
+protected Film f;
+    @Column(name = "SALACLS")
+protected Sale s;
+    @Column(name = "DATUM")
+protected LocalDate datum;
+    @Column(name = "TIME")
+protected LocalTime time;
+    @Column(name = "NAZWA1")
+protected String nazwa;// = f.getNazwa();
+    @Column(name = "SALA1")
+    protected String sala;// = f.getSala();
+    @ManyToOne
+    @JoinColumn(name = "FILM_ID")
+    public Film getF() {
+        return f;
+    }
+    public void setF(Film f) {
+        this.f = f;
     }
 
-    public void setTnr_sali(String tnr_sali) {
-        this.tnr_sali = tnr_sali;
+    @JoinColumn(name = "SALE_ID")
+    public Sale getS() {
+        return s;
+    }
+    public void setS(Sale s) {
+        this.s = s;
     }
 
-    public void setNazwa(String nazwa) {
-        this.nazwa = nazwa;
+
+    public LocalDate getDatum() {
+        return datum;
     }
 
-    public void setCzas(String czas) {
-        this.czas = czas;
+    public void setDatum(LocalDate datum) {
+        this.datum = datum;
     }
 
-    public void setLimit(String limit) {
-        this.limit = limit;
+    public Integer getSeans_id() {
+        return Seans_id;
     }
 
-    public void setKiedy_jest(LocalDate kiedy_jest) {
-        this.kiedy_jest = kiedy_jest;
-    }
-
-    public String getTnr_sali() {
-        return tnr_sali;
+    public void setSeans_id(Integer seans_id) {
+        Seans_id = seans_id;
     }
 
     public String getNazwa() {
         return nazwa;
     }
 
-    public String getCzas() {
-        return czas;
+    public void setNazwa(String nazwa) {
+        this.nazwa = nazwa;
     }
 
-    public String getLimit() {
-        return limit;
+    public String getSala() {
+        return sala;
     }
 
-    public LocalDate getKiedy_jest() {
-        return kiedy_jest;
+    public LocalTime getTime() {
+        return time;
     }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
+    }
+
+    public void setSala(String sala) {
+        this.sala = sala;
+    }
+    public Seans (Film f, Sale s, LocalDate d, LocalTime t) {
+        this.f = f;
+        this.s=s;
+        this.datum = d;
+        this.time = t;
+
+
+    }
+
 }

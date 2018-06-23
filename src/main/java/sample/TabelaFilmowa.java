@@ -8,13 +8,13 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javafx.event.ActionEvent;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Region;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.annotations.Entity;
+
 import org.hibernate.annotations.Table;
 import org.hibernate.cfg.Configuration;
 
@@ -49,18 +49,21 @@ public class TabelaFilmowa implements HierarchicalController<MainController> {
         film.setOpis(opis.getText());
         film.setCzas(czas.getText());
         film.setLimit(limit.getText());
-        tabelka.getItems().add(film);
+        //film.setSala("0"); film.setKiedy("juz");
+        dodajDoBazy(film);
+        tabelka.getItems().add(film);}
 
-/*        SessionFactory sessionFactory = new Configuration()
-                .configure("/hibernate.cfg.xml") // configures settings from hibernate.cfg.xml
-                .buildSessionFactory();
 
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-
-        Film film1 = (Film) session.load(Film.class, new Integer(1));
-        if(film1 != null)
-            System.out.println(film1.getNazwa());*/
+    private void dodajDoBazy(Film st) {
+        try (Session ses = parentController.getDataContainer().getSessionFactory().openSession()){//.getSessionFactory().openSession()) {
+            ses.beginTransaction();
+            ses.persist(st);
+            ses.getTransaction().commit();
+        } catch (HibernateException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            alert.show();
+        }
     }
 
     public void setParentController(MainController parentController) {
@@ -119,14 +122,5 @@ public class TabelaFilmowa implements HierarchicalController<MainController> {
         }
     }
 
-    private String id;
 
-    @Id
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 }

@@ -3,35 +3,48 @@ package sample;
 import javafx.scene.control.TextField;
 
 import javax.persistence.*;
-import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table (name = "FILM")
+@Table(name = "FILM")
 
-public class Film implements Serializable{
+public class Film implements Serializable {
 
-    //Na początek, jako obiekty: film (nazwa, opis, czas trwania w minutach, limit wiekowy, dla chętnych - obrazek z ilustracją),
-    // sala (number, liczba miejsc, typ sali). Trzeba zrobić jakąś formatkę pozwalającą na dodawanie filmów oraz sal.
-    // Docelowo także edycja / usuwanie.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     protected Integer id;
+    @Column (name = "NAZWA")
+    protected String nazwa;
+    @Column (name = "OPIS")
+    protected String opis;
+    @Column (name = "CZAS")
+    protected String czas;
+    @Column (name = "LIMIT")
+    protected String limit;
+    @Column (name = "KIEDY")
+    protected String kiedy;
+    @Column (name = "SALA")
+    public String sala;
 
-    public Integer getId() {
-        return id;
+    public Set<Seans> getsSeans() {
+        return sSeans;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setsSeans(Set<Seans> sSeans) {
+        this.sSeans = sSeans;
     }
 
-    public String nazwa;
-    public String opis;
-    public String czas;
-    public String limit;
-    public String kiedy;
+    @OneToMany
+    private Set<Seans> sSeans = new HashSet<>(0);
+
+    /*@ManyToMany (fetch = FetchType.EAGER)
+    @JoinTable(name = "FplusS", joinColumns = @JoinColumn(name = "FILM_ID"), inverseJoinColumns = @JoinColumn(name = "SALE_ID"))*/
+
 
     public String getKiedy() {
         return kiedy;
@@ -41,8 +54,10 @@ public class Film implements Serializable{
         return sala;
     }
 
-    public String sala;
+
     //public cośtam obrazek;
+
+
 
     public void setKiedy(String kiedy) {
         this.kiedy = kiedy;
@@ -91,7 +106,13 @@ public class Film implements Serializable{
 
         this.limit = limit;
     }
+    public Integer getId() {
+        return id;
+    }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
     //public costam getObrazek() {
     //    return obrazek;
     //}

@@ -1,20 +1,27 @@
 package sample;
 
 import javafx.event.ActionEvent;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.Region;
 import javafx.util.StringConverter;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
 
 public class Sala implements HierarchicalController<MainController> {
 
     public TextField tnazwa;
     public TextField tnr_sali;
     public TextField tkiedy;
-    public TableView<Film> tabelka;
+    public TableView<Sale> tabelka;
     private MainController parentController;
+    /*private MainController parentController;
+    public TextField tnazwa;
+    public TextField tnr_sali;
+    public TextField tkiedy;
+    public TableView<Sala> tabelka;
+*/
 
     @Override
     public MainController getParentController() {
@@ -26,69 +33,61 @@ public class Sala implements HierarchicalController<MainController> {
         this.parentController = parentController;
         tabelka.setEditable(true);
         //tabelka.getItems().addAll(parentController.getDataContainer().getStudents());
-        tabelka.setItems(parentController.getDataContainer().getFilmy());
+        tabelka.setItems(parentController.getDataContainer().getSale());
     }
-
 
     public void dodaj(ActionEvent actionEvent) {
-        Film st = new Film();
+        Sale st = new Sale();
         st.setNazwa(tnazwa.getText());
         st.setSala(tnr_sali.getText());
-        System.out.println ("sala"+tnr_sali.getText());
         //st.setLimit(typ.getText().isEmpty() ? null : Double.parseDouble(ocena.getText()));
         st.setKiedy(tkiedy.getText());
+        //System.out.println ("hash:"+st.getFilmiki().size() );
+        dodajDoBazy(st);
         tabelka.getItems().add(st);
     }
+    private void dodajDoBazy(Sale st) {
+        try (Session ses = parentController.getDataContainer().getSessionFactory().openSession()){//.getSessionFactory().openSession()) {
+            ses.beginTransaction();
+            ses.persist(st);
+            ses.getTransaction().commit();
+        } catch (HibernateException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, e.getMessage(), ButtonType.OK);
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            alert.show();
+        }
+    }
     public void initialize() {
-        for (TableColumn<Film, ?> studentTableColumn : tabelka.getColumns()) {
-            //System.out.println ("kolumna: "+studentTableColumn.getId());
-            if ("tnazwa".equals(studentTableColumn.getId())) {
-
-                TableColumn<Film, String> numerCol = (TableColumn<Film, String>) studentTableColumn;
-                numerCol.setCellValueFactory(new PropertyValueFactory<>("nazwa"));
-                numerCol.setCellFactory(TextFieldTableCell.forTableColumn());
-                numerCol.setOnEditCommit((val) -> {
-                    val.getTableView().getItems().get(val.getTablePosition().getRow()).setNazwa(val.getNewValue());
+        for (TableColumn<Sale, ?> groupTableColumn : tabelka.getColumns()) {
+            if ("tnazwa".equals(groupTableColumn.getId())) {
+                TableColumn<Sale, String> nazwaColumn = (TableColumn<Sale, String>) groupTableColumn;
+                nazwaColumn.setCellValueFactory(new PropertyValueFactory<>("nazwa"));
+                nazwaColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+                nazwaColumn.setOnEditCommit((val) -> {
+                    Sale editedGroup = val.getTableView().getItems().get(val.getTablePosition().getRow());
+                    editedGroup.setNazwa(val.getNewValue());
+                    //updateDatabaseValue(editedGroup);
                 });
-            } else if ("tnr_sali".equals(studentTableColumn.getId())) {
-                System.out.println ("w salach "+studentTableColumn.getId());
-                studentTableColumn.setCellValueFactory(new PropertyValueFactory<>("sala"));
-                //System.out.println ("w salach2 "+new PropertyValueFactory<>("nr_sali").getProperty());
-                ((TableColumn<Film, String>) studentTableColumn).setCellFactory(TextFieldTableCell.forTableColumn());
-            } else if ("tkiedy".equals(studentTableColumn.getId())) {
-                System.out.println ("w kiedach "+studentTableColumn.getId());
-                TableColumn<Film, String> typCol = (TableColumn<Film, String>) studentTableColumn;
-                typCol.setCellValueFactory(new PropertyValueFactory<>("kiedy"));
-                typCol.setCellFactory(TextFieldTableCell.forTableColumn());
-                typCol.setOnEditCommit((val) -> {
-                    val.getTableView().getItems().get(val.getTablePosition().getRow()).setKiedy(val.getNewValue().toString());
+            } else if ("tnr_sali".equals(groupTableColumn.getId())) {
+                TableColumn<Sale, String> salColumn = (TableColumn<Sale, String>) groupTableColumn;
+                salColumn.setCellValueFactory(new PropertyValueFactory<>("sala"));
+                salColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+                salColumn.setOnEditCommit((val) -> {
+                    Sale editedGroup = val.getTableView().getItems().get(val.getTablePosition().getRow());
+                    editedGroup.setSala(val.getNewValue());
+                    //updateDatabaseValue(editedGroup);
+                });
+            } else if ("tkiedy".equals(groupTableColumn.getId())) {
+                TableColumn<Sale, String> kiedyColumn = (TableColumn<Sale, String>) groupTableColumn;
+                kiedyColumn.setCellValueFactory(new PropertyValueFactory<>("kiedy"));
+                kiedyColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+                kiedyColumn.setOnEditCommit((val) -> {
+                    Sale editedGroup = val.getTableView().getItems().get(val.getTablePosition().getRow());
+                    editedGroup.setKiedy(val.getNewValue());
+                    //updateDatabaseValue(editedGroup);
                 });
             }
+
         }
-
     }
-
-   /* public int getNumer() {
-        return numer;
-    }
-
-    public void setNumer(int numer) {
-        this.numer = numer;
-    }
-
-    public int getMiejsca() {
-        return miejsca;
-    }
-
-    public void setMiejsca(int miejsca) {
-        this.miejsca = miejsca;
-    }
-
-    public String getTyp() {
-        return typ;
-    }
-
-    public void setTyp(String typ) {
-        this.typ = typ;
-    }*/
 }

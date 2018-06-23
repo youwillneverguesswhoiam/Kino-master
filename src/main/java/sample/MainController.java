@@ -19,6 +19,7 @@ public class MainController implements HierarchicalController<MainController> {
 
     public MainController() {
         dataContainer = new DataContainer();
+
     }
 
     public void daneOsobowe(ActionEvent actionEvent) {
@@ -54,4 +55,7 @@ public class MainController implements HierarchicalController<MainController> {
         loadIntoPane("/fxml/sala.fxml");
     }
 
+    public void seans(ActionEvent actionEvent) {
+        loadIntoPane("/fxml/seans.fxml");
+    }
 }
